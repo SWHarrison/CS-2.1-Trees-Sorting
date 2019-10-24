@@ -1,7 +1,7 @@
 #!python
 
 from sorting import random_ints
-from sorting_iterative import is_sorted, bubble_sort, selection_sort, insertion_sort
+from sorting_iterative import is_sorted, bubble_sort, selection_sort, insertion_sort, cocktail_sort
 from sorting_recursive import split_sort_merge, merge_sort, quick_sort
 from sorting_integer import counting_sort, bucket_sort
 import unittest
@@ -215,7 +215,7 @@ def get_sort_function():
 
 
 # If using PyTest, change this variable to the sort function you want to test
-sort = selection_sort
+sort = cocktail_sort
 #sort = insertion_sort
 
 
