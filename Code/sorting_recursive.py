@@ -66,25 +66,47 @@ def partition(items, low, high):
     # TODO: Move items less than pivot into front of range [low...p-1]
     # TODO: Move items greater than pivot into back of range [p+1...high]
     # TODO: Move pivot item into final position [p] and return index p
+    pivot = items[low]
+    swap_index = low + 1
+
+    for i in range(low+1, high):
+        if items[i] < pivot:
+            items[i], items[swap_index] = items[swap_index], items[i]
+            swap_index += 1
+
+    items[low], items[swap_index-1] = items[swap_index-1], items[low]
+    return (swap_index - 1)
 
 
-def quick_sort(items, low=None, high=None):
+def quick_sort(items):
+
+    _quick_sort(items, 0, len(items))
+
+
+def _quick_sort(items, low, high):
     """Sort given items in place by partitioning items in range `[low...high]`
     around a pivot item and recursively sorting each remaining sublist range.
     TODO: Best case running time: ??? Why and under what conditions?
     TODO: Worst case running time: ??? Why and under what conditions?
     TODO: Memory usage: ??? Why and under what conditions?"""
-    # TODO: Check if high and low range bounds have default values (not given)
-    # TODO: Check if list or range is so small it's already sorted (base case)
-    # TODO: Partition items in-place around a pivot and get index of pivot
+    print(items[low:high])
+    # Check if list or range is so small it's already sorted (base case)
+    if (high - low) < 2:
+        return
+    # Partition items in-place around a pivot and get index of pivot
+    swap_point = partition(items, low, high)
     # TODO: Sort each sublist range by recursively calling quick sort
+    _quick_sort(items,low, swap_point)
+    _quick_sort(items,swap_point + 1, high)
 
 
 if __name__ == '__main__':
     items1 = [2,4,5,8,10,13,14]
     items2 = [1,3,6,7,9,11,12]
     items = ['Z','a','b','e','E','F']
-    itemNumbers = [78,12,45,13,84,11,8,56,14,54,42,89,35,25,66,76]
-    print(merge(items1, items2))
-    print(merge_sort(items))
-    print(merge_sort(itemNumbers))
+    itemNumbers = [1,78,12,45,13,84,11,8,56,14,54,42,89,35,25,66,76]
+    #print(merge(items1, items2))
+    #print(merge_sort(items))
+    #print(merge_sort(itemNumbers))
+    quick_sort(itemNumbers)
+    print(itemNumbers)
