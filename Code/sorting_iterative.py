@@ -139,6 +139,7 @@ def insertion_sort(items):
                 items[i-j], items[i-j-1] = items[i-j-1], items[i-j]
             else:
                 break
+                
 if __name__ == '__main__':
     items = [5,1,2,77,9,3,4,6,8,11,15,10,0]
     cocktail_sort_with_helpers(items)

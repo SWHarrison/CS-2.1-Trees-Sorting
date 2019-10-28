@@ -6,9 +6,26 @@ def merge(items1, items2):
     and return a new list containing all items in sorted order.
     TODO: Running time: ??? Why and under what conditions?
     TODO: Memory usage: ??? Why and under what conditions?"""
-    # TODO: Repeat until one list is empty
-    # TODO: Find minimum item in both lists and append it to new list
-    # TODO: Append remaining items in non-empty list to new list
+    index_1 = 0
+    index_2 = 0
+
+    to_return = []
+
+    while index_1 < len(items1) and index_2 < len(items2):
+
+        if items1[index_1] < items2[index_2]:
+            to_return.append(items1[index_1])
+            index_1 += 1
+        else:
+            to_return.append(items2[index_2])
+            index_2 += 1
+
+    if(index_1 >= len(items1)):
+        to_return += items2[index_2:]
+    else:
+        to_return += items1[index_1:]
+
+    return to_return
 
 
 def split_sort_merge(items):
@@ -27,10 +44,14 @@ def merge_sort(items):
     sorting each recursively, and merging results into a list in sorted order.
     TODO: Running time: ??? Why and under what conditions?
     TODO: Memory usage: ??? Why and under what conditions?"""
-    # TODO: Check if list is so small it's already sorted (base case)
-    # TODO: Split items list into approximately equal halves
-    # TODO: Sort each half by recursively calling merge sort
-    # TODO: Merge sorted halves into one list in sorted order
+    if(len(items) <= 1):
+        return items
+
+    mid = len(items)//2
+    left_half = merge_sort(items[0:mid])
+    right_half = merge_sort(items[mid:])
+
+    return merge(left_half, right_half)
 
 
 def partition(items, low, high):
@@ -57,3 +78,13 @@ def quick_sort(items, low=None, high=None):
     # TODO: Check if list or range is so small it's already sorted (base case)
     # TODO: Partition items in-place around a pivot and get index of pivot
     # TODO: Sort each sublist range by recursively calling quick sort
+
+
+if __name__ == '__main__':
+    items1 = [2,4,5,8,10,13,14]
+    items2 = [1,3,6,7,9,11,12]
+    items = ['Z','a','b','e','E','F']
+    itemNumbers = [78,12,45,13,84,11,8,56,14,54,42,89,35,25,66,76]
+    print(merge(items1, items2))
+    print(merge_sort(items))
+    print(merge_sort(itemNumbers))
