@@ -27,6 +27,55 @@ def merge(items1, items2):
 
     return to_return
 
+def _merge_sort_helper(items, low, high):
+
+    mid = low + (high - low) // 2
+    left_sorted = items[low:mid]
+    right_sorted = items[mid:high]
+
+    index_left = 0
+    index_right = 0
+    items_index = low
+    while index_left < len(left_sorted) and index_right < len(right_sorted):
+
+        if left_sorted[index_left] < right_sorted[index_right]:
+            items[items_index] = left_sorted[index_left]
+            index_left += 1
+        else:
+            items[items_index] = right_sorted[index_right]
+            index_right += 1
+
+        items_index += 1
+
+    if(index_left < len(left_sorted)):
+
+        for i in range(index_left, len(left_sorted)):
+            items[items_index] = left_sorted[i]
+            items_index += 1
+
+    else:
+
+        for i in range(index_right, len(right_sorted)):
+            items[items_index] = right_sorted[i]
+            items_index += 1
+
+
+def merge_sort_in_place(items):
+
+    _merge_sort_in_place(items,0,len(items))
+
+
+def _merge_sort_in_place(items, low, high):
+
+    if high - low < 2:
+        return
+
+    mid = low + (high - low) // 2
+    _merge_sort_in_place(items, low, mid)
+    _merge_sort_in_place(items, mid, high)
+
+    _merge_sort_helper(items, low, high)
+
 
 def split_sort_merge(items):
     """Sort given items by splitting list into two approximately equal halves,
@@ -89,24 +138,20 @@ def _quick_sort(items, low, high):
     TODO: Best case running time: ??? Why and under what conditions?
     TODO: Worst case running time: ??? Why and under what conditions?
     TODO: Memory usage: ??? Why and under what conditions?"""
-    print(items[low:high])
     # Check if list or range is so small it's already sorted (base case)
     if (high - low) < 2:
         return
     # Partition items in-place around a pivot and get index of pivot
     swap_point = partition(items, low, high)
-    # TODO: Sort each sublist range by recursively calling quick sort
+    # Sort each sublist range by recursively calling quick sort
     _quick_sort(items,low, swap_point)
     _quick_sort(items,swap_point + 1, high)
 
 
 if __name__ == '__main__':
-    items1 = [2,4,5,8,10,13,14]
-    items2 = [1,3,6,7,9,11,12]
-    items = ['Z','a','b','e','E','F']
+    #items1 = [2,4,5,8,10,13,14]
+    #items2 = [1,3,6,7,9,11,12]
+    #items = [1,4,6,8,2,3,5,7]
     itemNumbers = [1,78,12,45,13,84,11,8,56,14,54,42,89,35,25,66,76]
-    #print(merge(items1, items2))
-    #print(merge_sort(items))
-    #print(merge_sort(itemNumbers))
-    quick_sort(itemNumbers)
+    merge_sort_in_place(itemNumbers)
     print(itemNumbers)
