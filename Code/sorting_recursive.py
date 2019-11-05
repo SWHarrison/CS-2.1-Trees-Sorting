@@ -27,6 +27,7 @@ def merge(items1, items2):
 
     return to_return
 
+
 def _merge_sort_helper(items, low, high):
 
     mid = low + (high - low) // 2
@@ -59,12 +60,12 @@ def _merge_sort_helper(items, low, high):
             items[items_index] = right_sorted[i]
             items_index += 1
 
-
+@profile
 def merge_sort_in_place(items):
 
     _merge_sort_in_place(items,0,len(items))
 
-
+@profile
 def _merge_sort_in_place(items, low, high):
 
     if high - low < 2:
@@ -83,9 +84,19 @@ def split_sort_merge(items):
     a list in sorted order.
     TODO: Running time: ??? Why and under what conditions?
     TODO: Memory usage: ??? Why and under what conditions?"""
-    # TODO: Split items list into approximately equal halves
-    # TODO: Sort each half using any other sorting algorithm
-    # TODO: Merge sorted halves into one list in sorted order
+    # Split items list into approximately equal halves
+    # Sort each half using any other sorting algorithm (using merge sort)
+    # Merge sorted halves into one list in sorted order
+    first_half = items[len(items) // 2:]
+    second_half = items[:len(items) // 2]
+    merge_sort(first_half)
+    merge_sort(second_half)
+    merge(first_half, second_half)
+
+    # I improved this algorithm by splitting each half then
+    # solving each using more efficient sorting algorithms
+    # than iterative approaches. It really should be a stretch
+    # challenge to do it with way.
 
 
 def merge_sort(items):
@@ -101,6 +112,54 @@ def merge_sort(items):
     right_half = merge_sort(items[mid:])
 
     return merge(left_half, right_half)
+
+
+def less_mem_merge(input,output,low,high):
+
+    mid = low + (high - low) // 2
+
+    index_left = low
+    index_right = mid
+    items_index = low
+    while index_left < mid and index_right < high:
+
+        if input[index_left] < input[index_right]:
+            output[items_index] = input[index_left]
+            index_left += 1
+        else:
+            output[items_index] = input[index_right]
+            index_right += 1
+
+        items_index += 1
+
+    if(index_left < mid):
+
+        for i in range(index_left, mid):
+            output[items_index] = input[i]
+            items_index += 1
+
+    else:
+
+        for i in range(index_right, high):
+            output[items_index] = input[i]
+            items_index += 1
+
+@profile
+def merge_sort_less_memory_setup(items):
+
+    aux_arr = items.copy()
+    aux_merge_sort(items,aux_arr,0,len(items))
+
+
+def aux_merge_sort(items,aux,low,high):
+
+    if((high - low) < 2):
+        return
+
+    mid = low + (high - low) // 2
+    left_half = aux_merge_sort(aux,items,low,mid)
+    right_half = aux_merge_sort(aux,items,mid,high)
+    less_mem_merge(aux,items,low,high)
 
 
 def partition(items, low, high):
@@ -149,9 +208,14 @@ def _quick_sort(items, low, high):
 
 
 if __name__ == '__main__':
-    #items1 = [2,4,5,8,10,13,14]
-    #items2 = [1,3,6,7,9,11,12]
-    #items = [1,4,6,8,2,3,5,7]
-    itemNumbers = [1,78,12,45,13,84,11,8,56,14,54,42,89,35,25,66,76]
-    merge_sort_in_place(itemNumbers)
-    print(itemNumbers)
+
+    import random
+    min = 0
+    max = 10000
+    count = 100000
+
+    test = [random.randint(min, max) for _ in range(count)]
+    items = [9,4,1,11,2,13,12,16,8,15,10,6,3,14,5,7]
+    #print(items,items2)
+    merge_sort_in_place(test)
+    #print(test)

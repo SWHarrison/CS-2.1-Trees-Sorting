@@ -215,8 +215,8 @@ def get_sort_function():
 
 
 # If using PyTest, change this variable to the sort function you want to test
-sort = merge_sort_in_place
-#sort = insertion_sort
+#sort = quick_sort
+sort = cocktail_sort
 
 
 if __name__ == '__main__':
