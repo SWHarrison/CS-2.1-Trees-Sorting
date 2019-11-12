@@ -35,15 +35,45 @@ class PrefixTree:
 
     def is_empty(self):
         """Return True if this prefix tree is empty (contains no strings)."""
-        # TODO
+        return self.size == 0
 
     def contains(self, string):
         """Return True if this prefix tree contains the given string."""
         # TODO
 
     def insert(self, string):
+        # Scenarios: 1. no child for that character 2. full match 3. partial match
+        # 1. Add suffix as new child (example: adding 'Skylar' to an 'S' node with no 'k' children)
+        # 2. Should never need to add a child here, move on to full match node
+        # 3. Break the child node into two parts wherever the split occurs
+        # Example: Adding 'Sasha' to 'S' -> 'am'
+        # Break 'am' into 'a' -> 'm', with 'm' keeping all of previous 'am' 's childrien
+        # New paths are 'S' -> 'A' -> 'Sha' and S -> 'A' -> 'M'
         """Insert the given string into this prefix tree."""
-        # TODO
+        current_node = self.root
+        current_string = string[:]
+        while current_string[0] in current_node.children:
+
+            current_node = current_node.children[current_string[0]]
+            no_match_index = 1
+            for i in range(1,min(len(current_string),len(current_node.full_path))):
+                if current_string[i] == current_node.full_path[i]:
+                    no_match_index += 1
+                else:
+                    break
+
+            #if partial match
+            if no_match_index < len(current_node.full_path):
+
+                # use index of where new string and old string diverge to get new paths
+                new_split_string = current_string[0:no_match_index]
+                remainder = current_string[no_match_index:]
+
+                #current node's path is
+                current_node.full_path = new_split_string
+
+                # old child getting new assignment if necessary
+
 
     def _find_node(self, string):
         """Return a tuple containing the node that terminates the given string
