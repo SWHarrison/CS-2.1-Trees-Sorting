@@ -173,7 +173,9 @@ class PrefixTree:
                 current_node.full_path = new_path
                 child_1 = PrefixTreeNode(child_1_path)
                 child_2 = PrefixTreeNode(child_2_path)
+                child_1.terminal = current_node.terminal
                 child_2.terminal = True
+                current_node.terminal = False
                 # transfer current_node's previous children to child_1
                 print("current_node is",current_node)
                 print("children are",current_node.children)
@@ -264,14 +266,16 @@ class PrefixTree:
         Start at the given node and visit each node with the given function."""
         print("looking at",node)
         print("prefix is",prefix)
+        print("whole word is",prefix+node.full_path)
         print("children with path",node.children)
         print("terminal:",node.terminal)
         if(node.terminal):
+            print("adding",prefix+node.full_path)
             visit(prefix+node.full_path)
         for child in node.children:
-            print(child)
+            #print(child)
             child = node.children[child]
-            print(child)
+            #print(child)
             self._traverse(child,prefix+node.full_path,visit)
 
 
