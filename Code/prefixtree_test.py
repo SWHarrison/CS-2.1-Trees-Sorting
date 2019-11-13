@@ -33,6 +33,7 @@ class PrefixTreeTest(unittest.TestCase):
     def test_insert_with_string(self):
         tree = PrefixTree()
         tree.insert('AB')
+        print(tree.root)
         # Verify root node
         assert tree.root.character == PrefixTree.START_CHARACTER
         assert tree.root.is_terminal() is False

@@ -207,6 +207,23 @@ def _quick_sort(items, low, high):
     _quick_sort(items,swap_point + 1, high)
 
 
+def BETSY_quick_sort(items, low = None, high = None):
+
+    if(low == None):
+        low = ?
+    if(high == None):
+        high = ?
+
+    if (BASE_CASE):
+        return
+
+    pivot_index = partition(items,low,high)
+
+    BETSY_quick_sort(items,?,?)
+    BETSY_quick_sort(items,?,?)
+
+
+
 if __name__ == '__main__':
 
     import random

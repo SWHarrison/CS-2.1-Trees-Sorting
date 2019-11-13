@@ -15,8 +15,12 @@ class PrefixTreeNode:
         """Initialize this prefix tree node with the given character value, an
         empty structure of children nodes, and a boolean terminal property."""
         # Character that this node represents
-        self.character = character[0]
-        self.full_path = character
+        if(character):
+            self.character = character[0]
+            self.full_path = character
+        else:
+            self.character = ""
+            self.full_path = ""
         # Data structure to associate character keys to children node values
         self.children = PrefixTreeNode.CHILDREN_TYPE()
         # Marks if this node terminates a string in the prefix tree
