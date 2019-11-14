@@ -134,23 +134,23 @@ class PrefixTree:
         current_node = self.root
         current_string = string[:]
         while True:
-            print("comparing",current_node.full_path,"to",current_string)
-            print("comparing",current_node.children,"to",current_string)
+            #print("comparing",current_node.full_path,"to",current_string)
+            #print("comparing",current_node.children,"to",current_string)
             try:
                 current_node = current_node.children[current_string[0]]
-                print("child exists for",current_string[0],"moving to that node")
+                #print("child exists for",current_string[0],"moving to that node")
             except KeyError:
                 # No more matching edges, add new node
-                print("child does NOT exist for",current_string[0],"creating that node")
+                #print("child does NOT exist for",current_string[0],"creating that node")
                 new_node = PrefixTreeNode(current_string)
                 new_node.terminal = True
                 current_node.add_child(current_string[0], new_node)
                 return
 
-            print("checking for partial match for",current_node.full_path,"to",current_string)
+            #print("checking for partial match for",current_node.full_path,"to",current_string)
             # Perfect match, make terminal if not already
             if current_string == current_node.full_path:
-                print("node is terminal:",current_node.terminal)
+                #print("node is terminal:",current_node.terminal)
                 current_node.terminal = True
                 return
 
@@ -159,11 +159,11 @@ class PrefixTree:
                 if (current_string[i] == current_node.full_path[i]):
                     first_mismatch_index += 1
 
-            print("first_mismatch_index is",first_mismatch_index)
+            #print("first_mismatch_index is",first_mismatch_index)
 
             # String partially matches to an existing node
             if len(current_string) < len(current_node.full_path) or first_mismatch_index < len(current_node.full_path):
-                print("partial match, fail at index",first_mismatch_index)
+                #print("partial match, fail at index",first_mismatch_index)
                 # child_1 is modified old child or new child that follows old path
                 # child_2 is new child with remainder of string
                 new_path = current_node.full_path[0:first_mismatch_index]
@@ -177,8 +177,8 @@ class PrefixTree:
                 child_2.terminal = True
                 current_node.terminal = False
                 # transfer current_node's previous children to child_1
-                print("current_node is",current_node)
-                print("children are",current_node.children)
+                #print("current_node is",current_node)
+                #print("children are",current_node.children)
                 to_remove = []
                 for key in current_node.children:
                     child_1.children[key] = current_node.children[key]
@@ -192,7 +192,7 @@ class PrefixTree:
                 return
             # Node continues on path
             else:
-                print("node continuing")
+                #print("node continuing")
                 current_string = current_string[first_mismatch_index:]
 
 
@@ -206,16 +206,18 @@ class PrefixTree:
 
         if(string == ""):
             return self.root
+        path = ""
         current_node = self.root
         current_string = string[:]
         while current_node != None and len(current_string) > 0:
 
             current_node = current_node.children[current_string[0]]
+            path += current_node.full_path
             #print(current_node)
             if(current_node == None):
                 return None
             if(current_string == current_node.full_path):
-                return current_node
+                return (current_node, path)
 
             last_match_index = 0
             for i in range(0, min(len(current_string),len(current_node.full_path))):
@@ -231,7 +233,7 @@ class PrefixTree:
                 # current string matches full path
                 if(last_match_index >= len(current_string)):
                     # therefore match and return current_node
-                    return current_node
+                    return (current_node, path)
                 else:
                     return None
             # else we move on or return None
@@ -250,9 +252,9 @@ class PrefixTree:
         # Create a list of completions in prefix tree
         completions = []
         start = self._find_node(prefix)
-        print("start node is", start)
+        #print("start node is", start[0])
         if start:
-            self._traverse(start,"",completions.append)
+            self._traverse(start[0],start[1][:-1],completions.append)
         return completions
 
     def strings(self):
@@ -264,13 +266,13 @@ class PrefixTree:
     def _traverse(self, node, prefix, visit):
         """Traverse this prefix tree with recursive depth-first traversal.
         Start at the given node and visit each node with the given function."""
-        print("looking at",node)
+        '''print("looking at",node)
         print("prefix is",prefix)
         print("whole word is",prefix+node.full_path)
         print("children with path",node.children)
-        print("terminal:",node.terminal)
+        print("terminal:",node.terminal)'''
         if(node.terminal):
-            print("adding",prefix+node.full_path)
+            #print("adding",prefix+node.full_path)
             visit(prefix+node.full_path)
         for child in node.children:
             #print(child)
@@ -323,22 +325,11 @@ def create_prefix_tree(strings):
 if __name__ == '__main__':
     # Create a dictionary of tongue-twisters with similar words to test with
     tree = PrefixTree()
-    print("inserting ABC")
     tree.insert("ABC")
-    print(tree.root.children)
-    print(tree.root.children['A'])
-    print("inserting ABD")
     tree.insert("ABD")
-    print(tree.root.children)
-    print(tree.root.children['A'])
-    print(tree.root.children['A'].children)
-    print(tree.root.children['A'].children['C'])
-    print(tree.root.children['A'].children['D'])
-    print("inserting ABDE")
     tree.insert("ABDE")
-    print("inserting ACA")
     tree.insert("ACA")
-    print("\n\nXXXXXXXXXXX all inserted testing")
+    '''print("\n\nXXXXXXXXXXX all inserted testing")
     print(tree.root.children)
     print(tree.root.children['A'])
     print(tree.root.children['A'].children)
@@ -351,6 +342,7 @@ if __name__ == '__main__':
     print(tree.root.children['A'].children['B'].children['C'].children)
     print(tree.root.children['A'].children['B'].children['D'].children)
     print(tree.root.children['A'].children['B'].children['D'].children['E'])
-    print("XXXXXXXXXXX")
+    print("XXXXXXXXXXX")'''
 
     print(tree.complete("A"))
+    # TODO: fix traverse's prefix problem
