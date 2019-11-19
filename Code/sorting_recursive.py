@@ -2,10 +2,7 @@
 
 
 def merge(items1, items2):
-    """Merge given lists of items, each assumed to already be in sorted order,
-    and return a new list containing all items in sorted order.
-    TODO: Running time: ??? Why and under what conditions?
-    TODO: Memory usage: ??? Why and under what conditions?"""
+    """Old version of merge for merge sort with less-efficient memory usage"""
     index_1 = 0
     index_2 = 0
 
@@ -27,63 +24,13 @@ def merge(items1, items2):
 
     return to_return
 
-
-def _merge_sort_helper(items, low, high):
-
-    mid = low + (high - low) // 2
-    left_sorted = items[low:mid]
-    right_sorted = items[mid:high]
-
-    index_left = 0
-    index_right = 0
-    items_index = low
-    while index_left < len(left_sorted) and index_right < len(right_sorted):
-
-        if left_sorted[index_left] < right_sorted[index_right]:
-            items[items_index] = left_sorted[index_left]
-            index_left += 1
-        else:
-            items[items_index] = right_sorted[index_right]
-            index_right += 1
-
-        items_index += 1
-
-    if(index_left < len(left_sorted)):
-
-        for i in range(index_left, len(left_sorted)):
-            items[items_index] = left_sorted[i]
-            items_index += 1
-
-    else:
-
-        for i in range(index_right, len(right_sorted)):
-            items[items_index] = right_sorted[i]
-            items_index += 1
-
-@profile
-def merge_sort_in_place(items):
-
-    _merge_sort_in_place(items,0,len(items))
-
-@profile
-def _merge_sort_in_place(items, low, high):
-
-    if high - low < 2:
-        return
-
-    mid = low + (high - low) // 2
-    _merge_sort_in_place(items, low, mid)
-    _merge_sort_in_place(items, mid, high)
-
-    _merge_sort_helper(items, low, high)
-
-
+# Alan said I could skip this (even if he forgot), but look at me I did it anyways
 def split_sort_merge(items):
     """Sort given items by splitting list into two approximately equal halves,
     sorting each with an iterative sorting algorithm, and merging results into
     a list in sorted order.
-    TODO: Running time: ??? Why and under what conditions?
-    TODO: Memory usage: ??? Why and under what conditions?"""
+    Running time: n log(n) because merge sort
+    Memory usage: n because merge sort"""
     # Split items list into approximately equal halves
     # Sort each half using any other sorting algorithm (using merge sort)
     # Merge sorted halves into one list in sorted order
@@ -91,7 +38,7 @@ def split_sort_merge(items):
     second_half = items[:len(items) // 2]
     merge_sort(first_half)
     merge_sort(second_half)
-    merge(first_half, second_half)
+    items[:] = merge(first_half, second_half)
 
     # I improved this algorithm by splitting each half then
     # solving each using more efficient sorting algorithms
@@ -99,23 +46,11 @@ def split_sort_merge(items):
     # challenge to do it with way.
 
 
-def merge_sort(items):
-    """Sort given items by splitting list into two approximately equal halves,
-    sorting each recursively, and merging results into a list in sorted order.
-    TODO: Running time: ??? Why and under what conditions?
-    TODO: Memory usage: ??? Why and under what conditions?"""
-    if(len(items) <= 1):
-        return items
-
-    mid = len(items)//2
-    left_half = merge_sort(items[0:mid])
-    right_half = merge_sort(items[mid:])
-
-    return merge(left_half, right_half)
-
-
 def less_mem_merge(input,output,low,high):
-
+    """Merge given lists of items, each assumed to already be in sorted order,
+    and return a new list containing all items in sorted order.
+    Runtime: Takes n + m time, where n is length of items 1 and m is length of items 2
+    Memory: Uses no extra space for this function"""
     mid = low + (high - low) // 2
 
     index_left = low
@@ -144,9 +79,16 @@ def less_mem_merge(input,output,low,high):
             output[items_index] = input[i]
             items_index += 1
 
-@profile
-def merge_sort_less_memory_setup(items):
 
+def merge_sort(items):
+    """
+    More memory efficient implementation of merge sort due to use of
+    auxillary array to store inputs/outputs
+    Runtime: n log(n) because it takes log(n) time to split array, then
+    each item in the array is merged together log (n) times which
+    means the largest operation takes n log(n) time
+    Memory: n extra mempry for auxillary array
+    """
     aux_arr = items.copy()
     aux_merge_sort(items,aux_arr,0,len(items))
 
@@ -207,32 +149,15 @@ def _quick_sort(items, low, high):
     _quick_sort(items,swap_point + 1, high)
 
 
-def BETSY_quick_sort(items, low = None, high = None):
-
-    if(low == None):
-        low = ?
-    if(high == None):
-        high = ?
-
-    if (BASE_CASE):
-        return
-
-    pivot_index = partition(items,low,high)
-
-    BETSY_quick_sort(items,?,?)
-    BETSY_quick_sort(items,?,?)
-
-
-
 if __name__ == '__main__':
 
     import random
     min = 0
     max = 10000
-    count = 100000
+    count = 100
 
     test = [random.randint(min, max) for _ in range(count)]
     items = [9,4,1,11,2,13,12,16,8,15,10,6,3,14,5,7]
-    #print(items,items2)
-    merge_sort_in_place(test)
-    #print(test)
+    print(test)
+    merge_sort(test)
+    print(test)

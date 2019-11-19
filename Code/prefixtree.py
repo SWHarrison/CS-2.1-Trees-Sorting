@@ -145,12 +145,15 @@ class PrefixTree:
                 new_node = PrefixTreeNode(current_string)
                 new_node.terminal = True
                 current_node.add_child(current_string[0], new_node)
+                self.size += 1
                 return
 
             #print("checking for partial match for",current_node.full_path,"to",current_string)
             # Perfect match, make terminal if not already
             if current_string == current_node.full_path:
                 #print("node is terminal:",current_node.terminal)
+                if(current_node.terminal == False):
+                    self.size += 1
                 current_node.terminal = True
                 return
 
@@ -172,10 +175,7 @@ class PrefixTree:
                 # set up new nodes and paths
                 current_node.full_path = new_path
                 child_1 = PrefixTreeNode(child_1_path)
-                child_2 = PrefixTreeNode(child_2_path)
                 child_1.terminal = current_node.terminal
-                child_2.terminal = True
-                current_node.terminal = False
                 # transfer current_node's previous children to child_1
                 #print("current_node is",current_node)
                 #print("children are",current_node.children)
@@ -187,8 +187,15 @@ class PrefixTree:
                     del current_node.children[item]
                 # add children to current_node
                 current_node.children[child_1_path[0]] = child_1
-                current_node.children[child_2_path[0]] = child_2
+                if(len(child_2_path) > 0):
+                    child_2 = PrefixTreeNode(child_2_path)
+                    child_2.terminal = True
+                    current_node.children[child_2_path[0]] = child_2
+                    current_node.terminal = False
+                else:
+                    current_node.terminal = True
 
+                self.size += 1
                 return
             # Node continues on path
             else:
@@ -252,16 +259,20 @@ class PrefixTree:
         # Create a list of completions in prefix tree
         completions = []
         start = self._find_node(prefix)
-        #print("start node is", start[0])
+        print("start node is", start[0])
+        print("path is",start[1])
         if start:
-            self._traverse(start[0],start[1][:-1],completions.append)
+            self._traverse(start[0],start[1][:-(len(start[1]) - 1)],completions.append)
         return completions
 
     def strings(self):
         """Return a list of all strings stored in this prefix tree."""
         # Create a list of all strings in prefix tree
         all_strings = []
-        # TODO
+        start = self.root
+        if start:
+            self._traverse(start,"",all_strings.append)
+        return all_strings
 
     def _traverse(self, node, prefix, visit):
         """Traverse this prefix tree with recursive depth-first traversal.
@@ -322,14 +333,13 @@ def create_prefix_tree(strings):
     print(f'matches? {matches}')
 
 
-if __name__ == '__main__':
-    # Create a dictionary of tongue-twisters with similar words to test with
+def test_1():
     tree = PrefixTree()
     tree.insert("ABC")
     tree.insert("ABD")
     tree.insert("ABDE")
     tree.insert("ACA")
-    '''print("\n\nXXXXXXXXXXX all inserted testing")
+    print("\n\nXXXXXXXXXXX all inserted testing")
     print(tree.root.children)
     print(tree.root.children['A'])
     print(tree.root.children['A'].children)
@@ -342,7 +352,19 @@ if __name__ == '__main__':
     print(tree.root.children['A'].children['B'].children['C'].children)
     print(tree.root.children['A'].children['B'].children['D'].children)
     print(tree.root.children['A'].children['B'].children['D'].children['E'])
-    print("XXXXXXXXXXX")'''
+    print("XXXXXXXXXXX")
+
+    print(tree.complete("AB"))
+    print(tree.strings())
+
+if __name__ == '__main__':
+
+    #test_1()
+    tree = PrefixTree()
+    to_insert = ['ABC', 'ABD', 'A', 'XYZ','ABDE','AB','AC']
+    for item in to_insert:
+        print("inserting",item )
+        tree.insert(item)
 
     print(tree.complete("A"))
-    # TODO: fix traverse's prefix problem
+    print(tree.strings())
