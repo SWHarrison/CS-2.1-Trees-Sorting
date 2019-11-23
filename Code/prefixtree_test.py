@@ -30,6 +30,7 @@ class PrefixTreeTest(unittest.TestCase):
         assert node_A.is_terminal() is True
         assert node_A.num_children() == 0
 
+    # modified test to fit structure of radix trees
     def test_insert_with_string(self):
         tree = PrefixTree()
         tree.insert('AB')
@@ -42,15 +43,12 @@ class PrefixTreeTest(unittest.TestCase):
         # Verify node 'A'
         node_A = tree.root.get_child('A')
         assert node_A.character == 'A'
-        assert node_A.is_terminal() is False
-        assert node_A.num_children() == 1
-        assert node_A.has_child('B') is True
-        # Verify node 'B'
-        node_B = node_A.get_child('B')
-        assert node_B.character == 'B'
-        assert node_B.is_terminal() is True
-        assert node_B.num_children() == 0
+        assert node_A.full_path == "AB"
+        assert node_A.is_terminal() is True
+        assert node_A.num_children() == 0
+        assert node_A.has_child('B') is False
 
+    # modified test to fit structure of radix trees
     def test_insert_with_4_strings(self):
         tree = PrefixTree()
         # Insert new string that starts from root node
@@ -60,23 +58,15 @@ class PrefixTreeTest(unittest.TestCase):
         assert tree.root.is_terminal() is False
         assert tree.root.num_children() == 1
         assert tree.root.has_child('A') is True
+
+        # Changed test to fit structure of Radix tree
         # Verify new node 'A'
         node_A = tree.root.get_child('A')
         assert node_A.character == 'A'
-        assert node_A.is_terminal() is False
-        assert node_A.num_children() == 1
-        assert node_A.has_child('B') is True
-        # Verify new node 'B'
-        node_B = node_A.get_child('B')
-        assert node_B.character == 'B'
-        assert node_B.is_terminal() is False
-        assert node_B.num_children() == 1
-        assert node_B.has_child('C') is True
-        # Verify new node 'C'
-        node_C = node_B.get_child('C')
-        assert node_C.character == 'C'
-        assert node_C.is_terminal() is True
-        assert node_C.num_children() == 0
+        assert node_A.is_terminal() is True
+        assert node_A.num_children() == 0
+        assert node_A.has_child('B') is False
+        assert node_A.full_path == "ABC"
 
         # Insert string with partial overlap so node 'B' has new child node 'D'
         tree.insert('ABD')
@@ -86,21 +76,26 @@ class PrefixTreeTest(unittest.TestCase):
         assert tree.root.num_children() == 1
         assert tree.root.has_child('A') is True
         # Verify node 'A' again
+        node_A = tree.root.children['A']
         assert node_A.character == 'A'
         assert node_A.is_terminal() is False
-        assert node_A.num_children() == 1
-        assert node_A.has_child('B') is True
-        # Verify node 'B' again
-        assert node_B.character == 'B'
-        assert node_B.is_terminal() is False
-        assert node_B.num_children() == 2  # Node 'B' now has two children
-        assert node_B.has_child('C') is True  # Node 'C' is still its child
-        assert node_B.has_child('D') is True  # Node 'D' is its new child
+        assert node_A.num_children() == 2
+        assert node_A.full_path == "AB"
+        assert node_A.has_child('B') is False
+        assert node_A.has_child('C') is True
+        assert node_A.has_child('D') is True
         # Verify new node 'D'
-        node_D = node_B.get_child('D')
+        node_D = node_A.get_child('D')
         assert node_D.character == 'D'
+        assert node_D.full_path == "D"
         assert node_D.is_terminal() is True
         assert node_D.num_children() == 0
+        node_C = node_A.get_child('C')
+        assert node_C.character == 'C'
+        assert node_C.full_path == "C"
+        assert node_C.is_terminal() is True
+        assert node_C.num_children() == 0
+
 
         # Insert substring already in tree so node 'A' becomes terminal
         tree.insert('A')
@@ -110,6 +105,7 @@ class PrefixTreeTest(unittest.TestCase):
         assert tree.root.num_children() == 1
         assert tree.root.has_child('A') is True
         # Verify node 'A' again
+        node_A = tree.root.children['A']
         assert node_A.character == 'A'
         assert node_A.is_terminal() is True  # Node 'A' is now terminal
         assert node_A.num_children() == 1  # Node 'A' still has one child
@@ -126,20 +122,10 @@ class PrefixTreeTest(unittest.TestCase):
         # Verify new node 'X'
         node_X = tree.root.get_child('X')
         assert node_X.character == 'X'
-        assert node_X.is_terminal() is False
-        assert node_X.num_children() == 1
-        assert node_X.has_child('Y') is True
-        # Verify new node 'Y'
-        node_Y = node_X.get_child('Y')
-        assert node_Y.character == 'Y'
-        assert node_Y.is_terminal() is False
-        assert node_Y.num_children() == 1
-        assert node_Y.has_child('Z') is True
-        # Verify new node 'Z'
-        node_Z = node_Y.get_child('Z')
-        assert node_Z.character == 'Z'
-        assert node_Z.is_terminal() is True
-        assert node_Z.num_children() == 0
+        assert node_X.full_path == "XYZ"
+        assert node_X.is_terminal() is True
+        assert node_X.num_children() == 0
+        assert node_X.has_child('Y') is False
 
     def test_size_and_is_empty(self):
         tree = PrefixTree()
@@ -228,7 +214,7 @@ class PrefixTreeTest(unittest.TestCase):
         assert tree.complete('C') == []
         assert tree.complete('D') == []
         assert tree.complete('XYZ') == ['XYZ']
-        assert tree.complete('XY') == []
+        assert tree.complete('XY') == ['XYZ'] # changed test, I believe it was faulty before
         assert tree.complete('YZ') == []
         assert tree.complete('X') == ['XYZ']
         assert tree.complete('Y') == []

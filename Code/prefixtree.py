@@ -40,7 +40,8 @@ class PrefixTree:
     def contains(self, string):
         """Return True if this prefix tree contains the given string."""
         node = self._find_node(string)
-        if node:
+        print(node)
+        if node and node[0].terminal and node[1] == string:
             return True
         return False
 
@@ -210,6 +211,7 @@ class PrefixTree:
         completely found, return None and the depth of the last matching node.
         Search is done iteratively with a loop starting from the root node."""
         # Radix tree does not have a useful depth attribute, therefore not returning it
+        # Instead returning the prefix to get to the current node
 
         if(string == ""):
             return self.root
@@ -218,7 +220,10 @@ class PrefixTree:
         current_string = string[:]
         while current_node != None and len(current_string) > 0:
 
-            current_node = current_node.children[current_string[0]]
+            if(current_string[0] in current_node.children):
+                current_node = current_node.children[current_string[0]]
+            else:
+                return None
             path += current_node.full_path
             #print(current_node)
             if(current_node == None):
@@ -259,10 +264,10 @@ class PrefixTree:
         # Create a list of completions in prefix tree
         completions = []
         start = self._find_node(prefix)
-        print("start node is", start[0])
-        print("path is",start[1])
+        #print("start node is", start[0])
+        #print("path is",start[1])
         if start:
-            self._traverse(start[0],start[1][:-(len(start[1]) - 1)],completions.append)
+            self._traverse(start[0],start[1],completions.append)
         return completions
 
     def strings(self):
@@ -283,13 +288,11 @@ class PrefixTree:
         print("children with path",node.children)
         print("terminal:",node.terminal)'''
         if(node.terminal):
-            #print("adding",prefix+node.full_path)
-            visit(prefix+node.full_path)
+            print("adding",prefix)
+            visit(prefix)
         for child in node.children:
-            #print(child)
             child = node.children[child]
-            #print(child)
-            self._traverse(child,prefix+node.full_path,visit)
+            self._traverse(child,prefix + child.full_path,visit)
 
 
 def create_prefix_tree(strings):
@@ -361,10 +364,11 @@ if __name__ == '__main__':
 
     #test_1()
     tree = PrefixTree()
-    to_insert = ['ABC', 'ABD', 'A', 'XYZ','ABDE','AB','AC']
+    to_insert = ['ABC', 'ABD', 'A', 'XYZ']
     for item in to_insert:
         print("inserting",item )
         tree.insert(item)
 
-    print(tree.complete("A"))
-    print(tree.strings())
+    print("complete: ",tree.complete("ABC"))
+    print("*********")
+    print("strings: ",tree.strings())
