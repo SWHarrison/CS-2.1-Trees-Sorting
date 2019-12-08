@@ -1,4 +1,4 @@
-12/7/19:
+12/7/19 4:45 PM:
 
 1. Handle case of root node needing to split in insert rather than _insert_helper
 2. Change eject in non-leaf nodes to not keep ejected value in one of two child nodes
@@ -6,3 +6,13 @@
   a. This is so that we can maintain the list structure at the leaf level
   b. Make new_node take current_node's next leaf
   c. Make current_node next_leaf point to the new_node
+
+12/7/19 6:00 PM
+
+insert method seems to be working after making above changes. Consider changing
+or refactoring code in insert due to similar code in handling ejections for both
+leaf and non-leaf nodes
+
+Time to work on contains!
+
+Changed creation of new node when not at leaf level to ensure node is not leaf

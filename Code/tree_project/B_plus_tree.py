@@ -32,6 +32,21 @@ class B_plus_tree:
     def is_empty(self):
         return self.size == 0
 
+    def contains(self, item):
+
+        current_node = self.root
+        while current_node.is_leaf == False:
+            print(current_node)
+            child_index = 0
+            while child_index < len(current_node.keys) and item >= current_node.keys[child_index]:
+                print(item, " is greater than or equal to", current_node.keys[child_index])
+                child_index += 1
+
+            current_node = current_node.children[child_index]
+        print("current node is",current_node, "checking for", item)
+        print("current node leaf?", current_node.is_leaf)
+        return item in current_node.keys
+
     def insert(self,item):
 
         # empty tree creates root
@@ -138,7 +153,7 @@ class B_plus_tree:
                     #eject = keys.pop(len(keys)//2)
                     eject = keys[mid]
                     print("ejecting*****",eject)
-                    new_node = B_plus_tree_node()
+                    new_node = B_plus_tree_node(False)
                     new_node.keys = keys[mid+1:]
                     new_node.children = current_node.children[mid+1:]
                     current_node.keys = keys[0:mid]
@@ -165,6 +180,11 @@ def test_bptree():
                 print(child2)
                 print("next leaf is",child2.next_leaf)
             print("next leaf is",child.next_leaf)
+
+    print("\n\n *********** DONE INSERTING")
+    print(tree.contains(60))
+    print(tree.contains(40))
+    print(tree.contains(75))
 
 if __name__ == '__main__':
     test_bptree()
