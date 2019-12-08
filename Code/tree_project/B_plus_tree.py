@@ -47,6 +47,25 @@ class B_plus_tree:
         print("current node leaf?", current_node.is_leaf)
         return item in current_node.keys
 
+    def all_values(self):
+
+        to_return = []
+        current_node = self.root
+        while current_node.is_leaf == False:
+            current_node = current_node.children[0]
+
+        while current_node.next_leaf:
+
+            for item in current_node.keys:
+                to_return.append(item)
+
+            current_node = current_node.next_leaf
+
+        for item in current_node.keys:
+            to_return.append(item)
+
+        return to_return
+
     def insert(self,item):
 
         # empty tree creates root
@@ -57,6 +76,7 @@ class B_plus_tree:
         else:
             current_node = self.root
             eject = self._insert_helper(current_node, item)
+            self.size += 1
             if eject != None:
                 self.root = B_plus_tree_node(False)
                 self.root.keys.append(eject[0])
@@ -116,7 +136,7 @@ class B_plus_tree:
             child_index = len(current_node.keys)
             for i in range(len(current_node.keys)):
                 print("item:",item,"key:",current_node.keys[i])
-                if item < current_node.keys[i]:
+                if item <= current_node.keys[i]:
                     print(item," is less than",current_node.keys[i])
                     child_index = i
                     break
@@ -167,7 +187,7 @@ class B_plus_tree:
 def test_bptree():
 
     tree = B_plus_tree()
-    items = [40,30,20,50,60,10,70,80,55,90,45]
+    items = [40,30,20,50,60,10,70,80,15,25,45,85,40]
     for item in items:
         print("inserting", item)
         tree.insert(item)
@@ -185,6 +205,7 @@ def test_bptree():
     print(tree.contains(60))
     print(tree.contains(40))
     print(tree.contains(75))
+    print(tree.all_values())
 
 if __name__ == '__main__':
     test_bptree()
