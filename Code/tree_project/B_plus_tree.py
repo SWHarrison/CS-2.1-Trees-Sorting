@@ -186,8 +186,8 @@ class B_plus_tree:
 
 def test_bptree():
 
-    tree = B_plus_tree()
-    items = [40,30,20,50,60,10,70,80,15,25,45,85,40]
+    tree = B_plus_tree(5)
+    items = [40,30,20,50,60,10,70,80,15,25,45,85]
     for item in items:
         print("inserting", item)
         tree.insert(item)

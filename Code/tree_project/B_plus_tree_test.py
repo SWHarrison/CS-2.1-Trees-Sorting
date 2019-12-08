@@ -113,6 +113,23 @@ class BPlusTreeTest(unittest.TestCase):
             tree.insert(item)
             assert tree.all_values() == sorted(items[:i])
 
+    def test_order_5(self):
+
+        tree = B_plus_tree(5)
+        items = [40,30,20,50,60,10,70,80,15,25,45,85]
+        i = 0
+        for item in items:
+            i += 1
+            tree.insert(item)
+            assert len(tree.root.keys) < 5
+            assert tree.root.is_leaf and len(tree.root.children) == 0 or len(tree.root.keys) == len(tree.root.children) - 1
+            assert tree.all_values() == sorted(items[:i])
+
+        assert tree.root.keys == [20,40,60]
+        assert tree.root.children[0].keys == [10,15]
+        assert tree.root.children[1].keys == [20,25,30]
+        assert tree.root.children[2].keys == [40,45,50]
+        assert tree.root.children[3].keys == [60,70,80,85]
 
 
 if __name__ == '__main__':
