@@ -105,7 +105,6 @@ class BinaryMinHeap(object):
         Best case running time: O(1) if item is smaller than both child items.
         Worst case running time: O(log n) if items on path down to a leaf are
         out of order. Maximum path length in complete binary tree is log n."""
-        print(self.items)
         if not (0 <= index <= self._last_index()):
             raise IndexError('Invalid index: {}'.format(index))
         # Get the index of the item's left and right children
@@ -146,7 +145,7 @@ class BinaryMinHeap(object):
 
 def test_binary_min_heap():
     # Create a binary min heap of 7 items
-    items = [9, 25, 86, 3, 29, 5, 55]
+    items = [(9,1), (25,2), (86,2), (3,1), (29,3), (5,2), (55,1), (5,1)]
     heap = BinaryMinHeap()
     print('heap: {}'.format(heap))
 

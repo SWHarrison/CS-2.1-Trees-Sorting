@@ -1,0 +1,8 @@
+12/7/19:
+
+1. Handle case of root node needing to split in insert rather than _insert_helper
+2. Change eject in non-leaf nodes to not keep ejected value in one of two child nodes
+3. Make sure to make new_node in ejections the "right" or larger node
+  a. This is so that we can maintain the list structure at the leaf level
+  b. Make new_node take current_node's next leaf
+  c. Make current_node next_leaf point to the new_node
