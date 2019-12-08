@@ -7,6 +7,7 @@ class B_plus_tree_node:
         self.is_leaf = is_leaf
         self.next_leaf = None
 
+    # currently unused and non-functional
     def add_node(self, key, new_node):
 
         for i in range(len(self.keys)):
@@ -46,6 +47,8 @@ class B_plus_tree:
                 self.root.keys.append(eject[0])
                 self.root.children.append(eject[2])
                 self.root.children.append(eject[1])
+                print("new root is",self.root)
+                print("children are",self.root.children)
 
     ''' From Wikipedia B+ tree article
     Perform a search to determine what bucket the new record should go into.
@@ -82,11 +85,14 @@ class B_plus_tree:
                 mid = len(keys) // 2
                 #eject = keys.pop(len(keys)//2)
                 eject = keys[mid]
+                print("ejecting",eject)
                 new_node = B_plus_tree_node()
                 new_node.keys = keys[mid:]
                 new_node.next_leaf = current_node.next_leaf
                 current_node.keys = keys[0:mid]
                 current_node.next_leaf = new_node
+                print("new node (right)",new_node)
+                print("old node (left)",current_node)
                 return (eject, new_node, current_node)
             else:
                 return None
@@ -106,10 +112,14 @@ class B_plus_tree:
             if ejected_item == None:
                 return None
             else:
+                print("ejected items",ejected_item)
+                print("current_node",current_node)
+                print("current_node children are", current_node.children)
                 to_add = ejected_item[0]
                 new_node = ejected_item[1]
                 old_node = ejected_item[2]
-                current_node.add_node(to_add, new_node)
+                current_node.children.insert(child_index+1,new_node)
+                print("current_node children",current_node.children)
                 # should now handle next_leaf when at leaf level
                 #if old_node.is_leaf:
                 #   old.node.next_leaf = new_node
@@ -119,14 +129,22 @@ class B_plus_tree:
                 index = len(keys) - 1
                 while index > 0 and keys[index] < keys[index - 1]:
                     keys[index], keys[index - 1] = keys[index - 1], keys[index]
+                    index -= 1
                 # if number of keys is greater than maximum number of keys, eject middle key to parent
                 if len(keys) >= self.order:
+                    print("current node full, ejecting")
+                    print("current node before ejection:",current_node)
                     mid = len(keys) // 2
                     #eject = keys.pop(len(keys)//2)
                     eject = keys[mid]
+                    print("ejecting*****",eject)
                     new_node = B_plus_tree_node()
-                    new_node.keys = keys[0:mid]
-                    current_node.keys = keys[mid + 1:]
+                    new_node.keys = keys[mid+1:]
+                    new_node.children = current_node.children[mid+1:]
+                    current_node.keys = keys[0:mid]
+                    current_node.children = current_node.children[0:mid+1]
+                    print("new node (right)",new_node)
+                    print("old node (left)",current_node)
                     return (eject, new_node, current_node)
                 else:
                     return None
@@ -134,7 +152,7 @@ class B_plus_tree:
 def test_bptree():
 
     tree = B_plus_tree()
-    items = [40,30,20,50,60,10,70]
+    items = [40,30,20,50,60,10,70,80,55,90,45]
     for item in items:
         print("inserting", item)
         tree.insert(item)
@@ -142,6 +160,11 @@ def test_bptree():
         print("children",len(tree.root.children))
         for child in tree.root.children:
             print(child)
+            print("children are",child.children)
+            for child2 in child.children:
+                print(child2)
+                print("next leaf is",child2.next_leaf)
+            print("next leaf is",child.next_leaf)
 
 if __name__ == '__main__':
     test_bptree()
