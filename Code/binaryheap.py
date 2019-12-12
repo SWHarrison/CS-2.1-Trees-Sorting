@@ -12,8 +12,7 @@ class BinaryMinHeap(object):
         # Initialize an empty list to store the items
         self.items = []
         if items:
-            for item in items:
-                self.insert(item)
+            self.items = heapify(items)
 
     def __repr__(self):
         """Return a string representation of this heap."""
@@ -143,6 +142,30 @@ class BinaryMinHeap(object):
         return (index << 1) + 2  # Shift left to multiply by 2
 
 
+def heapify(arr):
+
+    for i in range(len(arr) - 1,0,-1):
+        parent_index = self._parent_index(i)
+        if arr[i] < arr[parent_index]:
+            arr[i], arr[parent_index] = arr[parent_index], arr[i]
+
+def heapsort(items):
+
+    heapify(items)
+    for i in range(len(items) - 1,0,-1):
+        items[0], items[i] = items[i], items[0]
+        index = 0
+        left_child = (index << 1) + 1
+        right_child = (index << 1) + 2
+        child_index = left_child if items[left_child] <= items[right_child] else right_child
+        while items[index] > items[child_index]:
+            items[index], items[child_index] = items[child_index], items[index]
+            index = child_index
+            left_child = (index << 1) + 1
+            right_child = (index << 1) + 2
+            child_index = left_child if items[left_child] <= items[right_child] else right_child
+
+
 def test_binary_min_heap():
     # Create a binary min heap of 7 items
     items = [(9,1), (25,2), (86,2), (3,1), (29,3), (5,2), (55,1), (5,1)]
@@ -166,6 +189,8 @@ def test_binary_min_heap():
         print('delete_min: {}'.format(heap_min))
         print('heap: {}'.format(heap))
         print('size: {}'.format(heap.size()))
+
+    print(heap.heapify([5,6,7,1,2,19,23,4,65,24]))
 
 
 if __name__ == '__main__':

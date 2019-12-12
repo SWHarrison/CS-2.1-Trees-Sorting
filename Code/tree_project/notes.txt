@@ -16,3 +16,13 @@ leaf and non-leaf nodes
 Time to work on contains!
 
 Changed creation of new node when not at leaf level to ensure node is not leaf
+
+12/8 6:15 PM
+
+Notes on deletion from B+ tree visualization site.
+Only takes from "sibling" nodes aka same parent
+Takes from left over right if both are available regardless of how many in each
+if no siblings available to take then perform merge/rotation
+
+Merge node observations:
+Removes child node

@@ -34,6 +34,9 @@ class B_plus_tree:
 
     def contains(self, item):
 
+        if self.is_empty():
+            return False
+
         current_node = self.root
         while current_node.is_leaf == False:
             print(current_node)
@@ -184,6 +187,78 @@ class B_plus_tree:
                 else:
                     return None
 
+    def delete(self, item):
+
+        if self.is_empty():
+            raise ValueError("Tree is empty!")
+        else:
+            current_node = self.root
+            key_changes = self._delete_helper(current_node, item)
+            self.size -= 1
+
+    # first attempt at delete oh lawdy this sucks
+    '''
+    def _delete_helper(self, current_node, item):
+
+        if current_node.is_leaf:
+
+            removed = None
+            for i in range(len(current_node.keys)):
+                if current_node.keys[i] == item:
+                    removed = current_node.keys.pop(i)
+                    break
+            # no item removed, item not in tree
+            if removed == None:
+                print("value not found")
+                return (None, False)
+                #raise ValueError(item, "not in tree!")
+
+            else:
+                # check if work needs to be done to fix tree
+                if len(current_node.keys) == 0:
+                    return (removed, True)
+                else:
+                    return (removed, False)
+
+        else:
+            child_index = len(current_node.keys)
+            for i in range(len(current_node.keys)):
+                #print("item:",item,"key:",current_node.keys[i])
+                if item <= current_node.keys[i]:
+                    #print(item," is less than",current_node.keys[i])
+                    child_index = i
+                    break
+            print("child index is",child_index, "node will be",current_node.children[child_index])
+            child_node = current_node.children[child_index]
+            returned_value = self._delete_helper(child_node, item)
+            if returned_value[1] == False:
+                if returned_value[0] in current_node.keys:
+                    # need to change index keys in current_node to fix tree structure
+                    print("why is this so hard")
+                return None
+            else:
+                if child_node.is_leaf:
+                    # need to fix tree, start by checking siblings
+                    left_sibling = current_node.children[child_index - 1] if child_index > 0 else None
+                    if left_sibling:
+                        if len(left_sibling.keys) >= 2:
+                            # left sibling has enough to steal from
+                            value = left_sibling.keys.pop()
+                            child_node.keys.insert(0,value)
+                            current_node.keys[child_index - 1] = value
+                            return (removed, False)
+                    right_sibling = current_node.children[child_index + 1] if child_index < len(current_node.children) - 1 else None
+                    if right_sibling:
+                        if len(right_sibling.keys) >= 2:
+                            # left sibling has enough to steal from
+                            value = right_sibling.keys.pop(0)
+                            child_node.keys.append(value)
+                            current_node.keys[child_index] = value
+                            return (removed, False)
+                    # no siblings can give value, merging necessary'''
+
+
+
 def test_bptree():
 
     tree = B_plus_tree(5)
@@ -206,6 +281,7 @@ def test_bptree():
     print(tree.contains(40))
     print(tree.contains(75))
     print(tree.all_values())
+    tree.delete(40)
 
 if __name__ == '__main__':
     test_bptree()
