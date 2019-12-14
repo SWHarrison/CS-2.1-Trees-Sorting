@@ -55,8 +55,10 @@ class PriorityQueue(object):
         This method is more efficient than calling dequeue and then enqueue."""
         if self.length() == 0:
             raise ValueError('Priority queue is empty and has no front item')
-        # TODO: Replace and return minimum item from heap
-        # ...
+        to_return = self.front()
+        self.heap.items[0] = (priority, self.curr_id, item)
+        self.heap._bubble_down(0)
+        return to_return
 
 def test_priority_queue():
 
@@ -67,6 +69,19 @@ def test_priority_queue():
         print("adding",item,"with priority",priority)
         pri_q.enqueue(item, priority)
         priority = (priority + 1)%3
+
+    while pri_q.length() > 0:
+        print(pri_q.dequeue())
+
+    items = ["Sam","Suk","Zurich","Tom","Alan","Betsy","Eirika","Kevin","Ali"]
+    priority = 0
+    for item in items:
+        print("adding",item,"with priority",priority)
+        pri_q.enqueue(item, priority)
+        priority = (priority + 1)%3
+
+    print(pri_q.push_pop("Jackson", 4))
+    print(pri_q.heap.items)
 
     while pri_q.length() > 0:
         print(pri_q.dequeue())

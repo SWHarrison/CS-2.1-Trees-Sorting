@@ -12,7 +12,7 @@ class BinaryMinHeap(object):
         # Initialize an empty list to store the items
         self.items = []
         if items:
-            self.items = heapify(items)
+            self.items = min_heapify(items)
 
     def __repr__(self):
         """Return a string representation of this heap."""
@@ -142,33 +142,55 @@ class BinaryMinHeap(object):
         return (index << 1) + 2  # Shift left to multiply by 2
 
 
-def heapify(arr):
+def min_heapify(arr):
 
     for i in range(len(arr) - 1,0,-1):
-        parent_index = self._parent_index(i)
-        if arr[i] < arr[parent_index]:
-            arr[i], arr[parent_index] = arr[parent_index], arr[i]
+        parent_index = (i - 1) >> 1
+        curr_index = i
+        print("child:",arr[i],"parent:",arr[parent_index])
+        while arr[curr_index] < arr[parent_index] and curr_index >= 1:
+            print("swapping")
+            arr[curr_index], arr[parent_index] = arr[parent_index], arr[curr_index]
+            curr_index = parent_index
+            parent_index = (curr_index - 1) >> 1
+            print(arr)
+
+
+def max_heapify(arr):
+
+    for i in range(len(arr) - 1,0,-1):
+        parent_index = (i - 1) >> 1
+        curr_index = i
+        #print("child:",arr[i],"parent:",arr[parent_index])
+        while arr[curr_index] > arr[parent_index] and curr_index >= 1:
+            #print("swapping")
+            arr[curr_index], arr[parent_index] = arr[parent_index], arr[curr_index]
+            curr_index = parent_index
+            parent_index = (curr_index - 1) >> 1
+            #print(arr)
+
 
 def heapsort(items):
 
-    heapify(items)
-    for i in range(len(items) - 1,0,-1):
+    max_heapify(items)
+    for i in range(len(items) - 1,1,-1):
         items[0], items[i] = items[i], items[0]
         index = 0
-        left_child = (index << 1) + 1
-        right_child = (index << 1) + 2
-        child_index = left_child if items[left_child] <= items[right_child] else right_child
-        while items[index] > items[child_index]:
+        left_index = (index << 1) + 1
+        right_index = (index << 1) + 2
+        #child_index = left_child if items[left_child] <= items[right_child] else right_child
+        child_index = left_index if right_index >= len(items) or items[left_index] >= items[right_index] else right_index
+        while child_index < len(items) - (len(items) - i) and items[index] < items[child_index]:
             items[index], items[child_index] = items[child_index], items[index]
             index = child_index
-            left_child = (index << 1) + 1
-            right_child = (index << 1) + 2
-            child_index = left_child if items[left_child] <= items[right_child] else right_child
+            left_index = (index << 1) + 1
+            right_index = (index << 1) + 2
+            child_index = left_index if right_index >= len(items) or items[left_index] >= items[right_index] else right_index
 
 
 def test_binary_min_heap():
     # Create a binary min heap of 7 items
-    items = [(9,1), (25,2), (86,2), (3,1), (29,3), (5,2), (55,1), (5,1)]
+    '''items = [(9,1), (25,2), (86,2), (3,1), (29,3), (5,2), (55,1), (5,1)]
     heap = BinaryMinHeap()
     print('heap: {}'.format(heap))
 
@@ -188,9 +210,17 @@ def test_binary_min_heap():
         heap_min = heap.delete_min()
         print('delete_min: {}'.format(heap_min))
         print('heap: {}'.format(heap))
-        print('size: {}'.format(heap.size()))
+        print('size: {}'.format(heap.size()))'''
 
-    print(heap.heapify([5,6,7,1,2,19,23,4,65,24]))
+    #test = [5,6,7,1,2,19,23,4,65,24]
+    test = [87,12,54,89,34,56,1,4,67,102,5]
+    heap = BinaryMinHeap
+    #print(test)
+    #heapify(test)
+    #print("heapify done")
+    print(test)
+    heapsort(test)
+    print(test)
 
 
 if __name__ == '__main__':
