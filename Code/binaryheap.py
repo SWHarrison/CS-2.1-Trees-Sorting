@@ -20,7 +20,7 @@ class BinaryMinHeap(object):
 
     def is_empty(self):
         """Return True if this heap is empty, or False otherwise."""
-        return self.size() > 0
+        return self.size() == 0
 
     def size(self):
         """Return the number of items in this heap."""

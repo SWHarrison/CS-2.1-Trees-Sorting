@@ -39,7 +39,7 @@ class PriorityQueue(object):
         it, or None if this priority queue is empty."""
         if self.length() == 0:
             return None
-        return self.heap.get_min()
+        return self.heap.get_min()[2]
 
     def dequeue(self):
         """Remove and return the item at the front of this priority queue,
@@ -88,3 +88,20 @@ def test_priority_queue():
 
 if __name__ == '__main__':
     test_priority_queue()
+    PQ = PriorityQueue()
+    assert(PQ.is_empty())
+    assert(PQ.length() == 0)
+    PQ.enqueue("apple", 2)
+    assert(PQ.length() == 1)
+    assert(PQ.front() == "apple")
+    assert(PQ.length() == 1)
+    PQ.enqueue("orange", 0)
+    assert(PQ.length() == 2)
+    assert(PQ.front() == "orange")
+    assert(PQ.length() == 2)
+    assert(PQ.dequeue() == "orange")
+    assert(PQ.length() == 1)
+    assert(PQ.push_pop("banana", 4) == "apple")
+    assert(PQ.length() == 1)
+    assert(PQ.front() == "banana")
+    assert(PQ.length() == 1)
